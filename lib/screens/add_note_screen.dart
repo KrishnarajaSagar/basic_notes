@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:basic_notes/constants.dart';
+import 'package:hive/hive.dart';
+import 'package:basic_notes/models/note_model.dart';
+import 'package:basic_notes/boxes.dart';
 
 class AddNoteScreen extends StatefulWidget {
   const AddNoteScreen({Key? key}) : super(key: key);
@@ -10,6 +13,9 @@ class AddNoteScreen extends StatefulWidget {
 }
 
 class _AddNoteScreenState extends State<AddNoteScreen> {
+  late String title;
+  late String body;
+  bool isPinned = false;
   @override
   Widget build(BuildContext context) {
     Size device = MediaQuery.of(context).size;
@@ -20,51 +26,74 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         actions: [
           IconButton(
             icon: const Icon(LineIcons.save),
-            onPressed: () {},
+            onPressed: () {
+              addNote(title, body, isPinned);
+              Navigator.of(context).pop();
+            },
           ),
         ],
       ),
-      body: ListView(
-        children: [
-          Container(
-            height: device.height / 7,
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Title",
-                hintStyle: kHintTextStyle.copyWith(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: ListView(
+          children: [
+            Container(
+              height: device.height / 7,
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: "Title",
+                  hintStyle: kTitleTextStyle.copyWith(
+                      fontSize: 28, color: Colors.grey),
+                  border: InputBorder.none,
+                ),
+                style: kTitleTextStyle.copyWith(
                   fontSize: 28,
+                ),
+                onChanged: (String s) {
+                  title = s;
+                },
+                cursorColor: Colors.white,
+                maxLines: 3,
+                keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.sentences,
+                textInputAction: TextInputAction.next,
+              ),
+            ),
+            TextField(
+              decoration: InputDecoration(
+                hintText: "Let it flow...!",
+                hintStyle: kBodyTextStyle.copyWith(
+                  fontSize: 14,
+                  color: Colors.grey,
                 ),
                 border: InputBorder.none,
               ),
-              style: kTextStyle.copyWith(
-                fontSize: 28,
-              ),
-              cursorColor: Colors.white,
-              maxLines: 3,
-              keyboardType: TextInputType.text,
-              textCapitalization: TextCapitalization.sentences,
-              textInputAction: TextInputAction.next,
-            ),
-          ),
-          TextField(
-            decoration: InputDecoration(
-              hintText: "Let it flow...!",
-              hintStyle: kHintTextStyle.copyWith(
+              style: kBodyTextStyle.copyWith(
                 fontSize: 14,
               ),
-              border: InputBorder.none,
+              onChanged: (String s) {
+                body = s;
+              },
+              cursorColor: Colors.white,
+              textCapitalization: TextCapitalization.sentences,
+              keyboardType: TextInputType.multiline,
+              //textInputAction: TextInputAction.newline,
+              maxLines: null,
             ),
-            style: kTextStyle.copyWith(
-              fontSize: 14,
-            ),
-            cursorColor: Colors.white,
-            textCapitalization: TextCapitalization.sentences,
-            keyboardType: TextInputType.multiline,
-            //textInputAction: TextInputAction.newline,
-            maxLines: null,
-          ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  void addNote(String title, String body, bool isPinned) {
+    final note = NoteModel(
+      title: title,
+      body: body,
+      isPinned: isPinned,
+    );
+
+    final box = Boxes.getNotes();
+    box.add(note);
   }
 }
