@@ -16,11 +16,17 @@ class NotesScreen extends StatefulWidget {
 }
 
 class _NotesScreenState extends State<NotesScreen> {
-  @override
-  void dispose() {
-    Hive.close();
-    super.dispose();
-  }
+  // @override
+  // void initState() {
+  //   Hive.openBox('notes');
+  //   super.initState();
+  // }
+
+  // @override
+  // void dispose() {
+  //   Hive.close();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +107,10 @@ class _NotesScreenState extends State<NotesScreen> {
               Navigator.of(context).push(
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
-                      ViewNoteScreen(),
+                      ViewNoteScreen(
+                    notes[index],
+                    index,
+                  ),
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) {
                     return SlideTransition(

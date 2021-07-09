@@ -1,33 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:basic_notes/constants.dart';
-import 'package:hive/hive.dart';
 import 'package:basic_notes/models/note_model.dart';
 import 'package:basic_notes/boxes.dart';
 
-class AddNoteScreen extends StatefulWidget {
-  const AddNoteScreen({Key? key}) : super(key: key);
+class EditNoteScreen extends StatefulWidget {
+  final NoteModel currentNote;
+  int num;
+  EditNoteScreen(this.currentNote, this.num);
 
   @override
-  _AddNoteScreenState createState() => _AddNoteScreenState();
+  _EditNoteScreenState createState() => _EditNoteScreenState();
 }
 
-class _AddNoteScreenState extends State<AddNoteScreen> {
-  late String title;
-  late String body;
+class _EditNoteScreenState extends State<EditNoteScreen> {
+  String? title;
+  String? body;
   bool isPinned = false;
+
+  // final TextEditingController titleController =
+  // TextEditingController(text: widget.currentNote.title);
+  // final TextEditingController bodyController =
+  // TextEditingController(text: widget.currentNote.body);
+
+  // @override
+  // void dispose() {
+  //   title
+  //   super.dispose();
+  // }
+
   @override
   Widget build(BuildContext context) {
     Size device = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add"),
+        title: const Text("Edit"),
         actions: [
           IconButton(
             icon: const Icon(LineIcons.save),
             onPressed: () {
-              addNote(title, body, isPinned);
+              editNote(title!, body!, isPinned, widget.num);
               Navigator.of(context).pop();
             },
           ),
@@ -39,19 +54,21 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
           children: [
             Container(
               height: device.height / 7,
-              child: TextField(
+              child: TextFormField(
                 decoration: InputDecoration(
+                  border: InputBorder.none,
                   hintText: "Title",
                   hintStyle: kTitleTextStyle.copyWith(
                       fontSize: 28, color: Colors.grey),
-                  border: InputBorder.none,
                 ),
+                //controller: titleController,
                 style: kTitleTextStyle.copyWith(
                   fontSize: 28,
                 ),
                 onChanged: (String s) {
                   title = s;
                 },
+                //initialValue: widget.currentNote.title,
                 cursorColor: Colors.white,
                 maxLines: 3,
                 keyboardType: TextInputType.text,
@@ -59,21 +76,23 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                 textInputAction: TextInputAction.next,
               ),
             ),
-            TextField(
+            TextFormField(
               decoration: InputDecoration(
+                border: InputBorder.none,
                 hintText: "Let it flow...!",
                 hintStyle: kBodyTextStyle.copyWith(
                   fontSize: 14,
                   color: Colors.grey,
                 ),
-                border: InputBorder.none,
               ),
               style: kBodyTextStyle.copyWith(
                 fontSize: 14,
               ),
+              //controller: bodyController,
               onChanged: (String s) {
                 body = s;
               },
+              //initialValue: widget.currentNote.body,
               cursorColor: Colors.white,
               textCapitalization: TextCapitalization.sentences,
               keyboardType: TextInputType.multiline,
@@ -86,14 +105,13 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
     );
   }
 
-  void addNote(String title, String body, bool isPinned) {
-    final note = NoteModel(
+  void editNote(String title, String body, bool isPinned, int num) {
+    final box = Boxes.getNotes();
+    NoteModel updatedNote = NoteModel(
       title: title,
       body: body,
       isPinned: isPinned,
     );
-
-    final box = Boxes.getNotes();
-    box.add(note);
+    box.putAt(num, updatedNote);
   }
 }
