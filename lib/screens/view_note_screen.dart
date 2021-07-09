@@ -18,7 +18,7 @@ class ViewNoteScreen extends StatefulWidget {
 }
 
 class _ViewNoteScreenState extends State<ViewNoteScreen> {
-  @override
+  // @override
   // void initState() {
   //   Hive.openBox('notes');
   //   super.initState();
@@ -29,6 +29,9 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
   //   Hive.close();
   //   super.dispose();
   // }
+
+  final deletedSnackBar =
+      const SnackBar(content: Text("Note successfully deleted"));
 
   @override
   Widget build(BuildContext context) {
@@ -63,87 +66,49 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
               );
             },
           ),
-          buildPopupMenu(widget.num),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: ListView(
-          children: [
-            Container(
-              height: device.height / 7,
-              child: Text(
-                widget.currentNote.title,
-                style: kTitleTextStyle.copyWith(
-                  fontSize: 28,
-                ),
-              ),
-            ),
-            Text(
-              widget.currentNote.body,
-              style: kBodyTextStyle.copyWith(
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildPopupMenu(int num) {
-    return PopupMenuButton(
-      itemBuilder: (context) {
-        return [
-          PopupMenuItem(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Icon(
-                  FontAwesomeIcons.bookmark,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "Pin",
-                  style: kBodyTextStyle,
-                ),
-                const SizedBox(
-                  width: 30,
-                ),
-              ],
-            ),
-          ),
-          PopupMenuItem(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Icon(FontAwesomeIcons.trash),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "Delete",
-                  style: kBodyTextStyle,
-                ),
-                const SizedBox(
-                  width: 30,
-                ),
-              ],
-            ),
-            onTap: () {
-              deleteNote(num);
-              Navigator.of(context).pop();
+          IconButton(
+            icon: const Icon(LineIcons.trash),
+            onPressed: () {
+              setState(() {
+                Navigator.pop(context);
+                //ScaffoldMessenger.of(context).showSnackBar(deletedSnackBar);
+                deleteNote(widget.num);
+              });
             },
           ),
-        ];
-      },
-      color: kCardBGColor,
-      icon: const Icon(LineIcons.verticalEllipsis),
+        ],
+      ),
+      body: ValueListenableBuilder<Box<NoteModel>>(
+        valueListenable: Boxes.getNotes().listenable(),
+        builder: (context, box, _) {
+          final notes = box.values.toList().cast<NoteModel>();
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: ListView(
+              children: [
+                Container(
+                  height: device.height / 7,
+                  child: Text(
+                    notes[widget.num].title,
+                    style: kTitleTextStyle.copyWith(
+                      fontSize: 28,
+                    ),
+                  ),
+                ),
+                Text(
+                  notes[widget.num].body,
+                  style: kBodyTextStyle.copyWith(
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 

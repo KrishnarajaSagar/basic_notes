@@ -9,6 +9,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:basic_notes/boxes.dart';
 import 'view_note_screen.dart';
+import 'package:animate_icons/animate_icons.dart';
 
 class NotesScreen extends StatefulWidget {
   @override
@@ -44,10 +45,6 @@ class _NotesScreenState extends State<NotesScreen> {
         actions: [
           IconButton(
             icon: const Icon(LineIcons.search),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(LineIcons.verticalEllipsis),
             onPressed: () {},
           ),
         ],
@@ -152,14 +149,24 @@ class _NotesScreenState extends State<NotesScreen> {
                       Container(
                         width: 30,
                         child: IconButton(
-                          icon: Icon(
-                            FontAwesomeIcons.bookmark,
-                            color: kAccentColor,
-                            size: 18,
-                          ),
+                          icon: notes[index].isPinned == false
+                              ? Icon(
+                                  FontAwesomeIcons.bookmark,
+                                  color: kAccentColor,
+                                  size: 18,
+                                )
+                              : Icon(
+                                  FontAwesomeIcons.solidBookmark,
+                                  color: kAccentColor,
+                                  size: 18,
+                                ),
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              notes[index].isPinned = !notes[index].isPinned;
+                            });
+                          },
                         ),
                       ),
                     ],

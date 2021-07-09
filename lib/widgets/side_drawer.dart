@@ -20,11 +20,9 @@ class SideDrawer extends StatelessWidget {
                 ),
               ),
             ),
+            buildDrawerListTile(title: "Notes", icon: LineIcons.stickyNote),
             buildDrawerListTile(title: "Saved", icon: LineIcons.bookmark),
             buildDrawerListTile(title: "Settings", icon: LineIcons.cog),
-            const Divider(
-              color: Colors.grey,
-            ),
             buildDrawerListTile(
                 title: "Exit", icon: LineIcons.alternateSignOut),
           ],

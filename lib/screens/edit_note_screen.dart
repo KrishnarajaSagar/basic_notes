@@ -34,6 +34,8 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
   @override
   Widget build(BuildContext context) {
     Size device = MediaQuery.of(context).size;
+    title = widget.currentNote.title;
+    body = widget.currentNote.body;
 
     return Scaffold(
       appBar: AppBar(
@@ -68,7 +70,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
                 onChanged: (String s) {
                   title = s;
                 },
-                //initialValue: widget.currentNote.title,
+                initialValue: title,
                 cursorColor: Colors.white,
                 maxLines: 3,
                 keyboardType: TextInputType.text,
@@ -92,7 +94,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
               onChanged: (String s) {
                 body = s;
               },
-              //initialValue: widget.currentNote.body,
+              initialValue: body,
               cursorColor: Colors.white,
               textCapitalization: TextCapitalization.sentences,
               keyboardType: TextInputType.multiline,
