@@ -1,39 +1,27 @@
+import 'package:basic_notes/boxes.dart';
 import 'package:basic_notes/constants.dart';
 import 'package:basic_notes/models/note_model.dart';
+import 'package:basic_notes/screens/view_note_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'add_note_screen.dart';
-import 'package:basic_notes/widgets/side_drawer.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:basic_notes/boxes.dart';
-import 'view_note_screen.dart';
-import 'package:animate_icons/animate_icons.dart';
+import 'package:line_icons/line_icons.dart';
+import 'package:basic_notes/widgets/side_drawer.dart';
 
-class NotesScreen extends StatefulWidget {
+class SavedNotesScreen extends StatefulWidget {
+  const SavedNotesScreen({Key? key}) : super(key: key);
+
   @override
-  _NotesScreenState createState() => _NotesScreenState();
+  _SavedNotesScreenState createState() => _SavedNotesScreenState();
 }
 
-class _NotesScreenState extends State<NotesScreen> {
-  // @override
-  // void initState() {
-  //   Hive.openBox('notes');
-  //   super.initState();
-  // }
-
-  // @override
-  // void dispose() {
-  //   Hive.close();
-  //   super.dispose();
-  // }
-
+class _SavedNotesScreenState extends State<SavedNotesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Notes"),
+        title: const Text("Saved"),
         leading: Builder(
           builder: (context) {
             return IconButton(
@@ -49,45 +37,19 @@ class _NotesScreenState extends State<NotesScreen> {
           ),
         ],
       ),
-      drawer: SideDrawer(1),
+      drawer: SideDrawer(2),
       body: ValueListenableBuilder<Box<NoteModel>>(
         valueListenable: Boxes.getNotes().listenable(),
         builder: (context, box, _) {
           final notes = box.values.toList().cast<NoteModel>();
-          return buildNotes(notes);
+          Iterable<NoteModel> savedNotes;
+          savedNotes = notes.where((element) {
+            return element.isPinned == true;
+          });
+          List<NoteModel> savedNotesList = savedNotes.toList();
+          return buildNotes(savedNotesList);
         },
       ),
-      floatingActionButton: SizedBox(
-        height: 50,
-        width: 100,
-        child: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    AddNoteScreen(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return SlideTransition(
-                    position: animation.drive(
-                      Tween(
-                        begin: const Offset(0, 1),
-                        end: const Offset(0, 0),
-                      ).chain(CurveTween(curve: Curves.easeOutCubic)),
-                    ),
-                    child: child,
-                  );
-                },
-              ),
-            );
-          },
-          backgroundColor: kAccentColor,
-          child: const Icon(LineIcons.plus),
-          mini: true,
-        ),
-      ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterFloat,
     );
   }
 

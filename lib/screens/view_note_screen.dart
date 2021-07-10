@@ -69,11 +69,41 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
           IconButton(
             icon: const Icon(LineIcons.trash),
             onPressed: () {
-              setState(() {
-                Navigator.pop(context);
-                //ScaffoldMessenger.of(context).showSnackBar(deletedSnackBar);
-                deleteNote(widget.num);
-              });
+              showDialog(
+                  context: context,
+                  builder: (_) {
+                    return AlertDialog(
+                      title: Text(
+                        "Confirm deletion?",
+                        style: kBodyTextStyle,
+                      ),
+                      backgroundColor: kCardBGColor,
+                      actions: [
+                        TextButton(
+                          child: Text(
+                            "Cancel",
+                            style: kBodyTextStyle,
+                          ),
+                          onPressed: () {},
+                        ),
+                        OutlinedButton(
+                          child: Text(
+                            "Confirm",
+                            style: kBodyTextStyle.copyWith(color: Colors.red),
+                          ),
+                          onPressed: () {
+                            //setState(() {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(deletedSnackBar);
+                            deleteNote(widget.num);
+                            //});
+                          },
+                        ),
+                      ],
+                    );
+                  });
             },
           ),
         ],
