@@ -4,83 +4,90 @@ import 'package:basic_notes/models/note_model.dart';
 import 'package:basic_notes/screens/view_note_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:basic_notes/widgets/side_drawer.dart';
 
-class SavedNotesScreen extends StatefulWidget {
-  const SavedNotesScreen({Key? key}) : super(key: key);
-
+class NoteSearch extends SearchDelegate<String> {
   @override
-  _SavedNotesScreenState createState() => _SavedNotesScreenState();
-}
-
-class _SavedNotesScreenState extends State<SavedNotesScreen> {
-  List<int> savedNotesNumbers = [];
-  List<NoteModel> savedNotes = [];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Saved"),
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              icon: const Icon(LineIcons.bars),
-              onPressed: () => Scaffold.of(context).openDrawer(),
-            );
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(LineIcons.search),
-            onPressed: () {
-              print(savedNotesNumbers);
-            },
-          ),
-        ],
-      ),
-      drawer: SideDrawer(2),
-      body: ValueListenableBuilder<Box<NoteModel>>(
-        valueListenable: Boxes.getNotes().listenable(),
-        builder: (context, box, _) {
-          final notes = box.values.toList().cast<NoteModel>();
-          savedNotes = notes.where((element) {
-            return element.isPinned == true;
-          }).toList();
-          for (int i = 0; i < savedNotes.length; i++) {
-            savedNotesNumbers.add(notes.indexOf(savedNotes[i]));
-          }
-
-          return savedNotes.isEmpty
-              ? SizedBox.expand(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        LineIcons.snowflake,
-                        size: 80,
-                        color: Colors.grey,
-                      ),
-                      Text(
-                        "Wow so empty!",
-                        style: kBodyTextStyle.copyWith(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                )
-              : buildNotes(
-                  savedNotes,
-                  savedNotesNumbers,
-                );
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(LineIcons.times),
+        onPressed: () {
+          query = "";
         },
       ),
-    );
+    ];
+    throw UnimplementedError();
   }
 
-  Widget buildNotes(List<NoteModel> notes, List<int> noteNumbers) {
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(LineIcons.arrowLeft),
+      onPressed: () {
+        close(context, "");
+      },
+    );
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return ValueListenableBuilder<Box<NoteModel>>(
+      valueListenable: Boxes.getNotes().listenable(),
+      builder: (context, box, _) {
+        final notes = box.values.toList().cast<NoteModel>();
+        final List<int> suggestionNotesNumbers = [];
+        final suggestionNotes = notes.where((element) {
+          return (element.title.toLowerCase().contains(query) ||
+              element.body.toLowerCase().contains(query));
+        }).toList();
+        for (int i = 0; i < suggestionNotes.length; i++) {
+          suggestionNotesNumbers.add(notes.indexOf(suggestionNotes[i]));
+        }
+        return buildNotes(suggestionNotes, suggestionNotesNumbers);
+      },
+    );
+    throw UnimplementedError();
+  }
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    return ThemeData.dark().copyWith(
+      appBarTheme: AppBarTheme(
+        backgroundColor: const Color(0xff272121),
+        centerTitle: true,
+        elevation: 0,
+        textTheme: TextTheme(
+          headline6: GoogleFonts.openSans(fontSize: 16, color: Colors.white),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme().copyWith(
+        border: InputBorder.none,
+        hintStyle: kBodyTextStyle.copyWith(color: Colors.grey),
+        labelStyle: kBodyTextStyle,
+      ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: kAccentColor,
+        selectionColor: kAccentColor,
+        selectionHandleColor: kAccentColor,
+      ),
+      scaffoldBackgroundColor: const Color(0xff272121),
+      accentColor: Colors.deepOrangeAccent,
+    );
+    throw UnimplementedError();
+  }
+
+  Widget buildNotes(List<NoteModel> notes, List<int> notesNumbers) {
     return GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -95,7 +102,7 @@ class _SavedNotesScreenState extends State<SavedNotesScreen> {
                   pageBuilder: (context, animation, secondaryAnimation) =>
                       ViewNoteScreen(
                     notes[index],
-                    noteNumbers[index],
+                    notesNumbers[index],
                   ),
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) {
@@ -120,6 +127,7 @@ class _SavedNotesScreenState extends State<SavedNotesScreen> {
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -152,9 +160,7 @@ class _SavedNotesScreenState extends State<SavedNotesScreen> {
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onPressed: () {
-                            setState(() {
-                              notes[index].isPinned = !notes[index].isPinned;
-                            });
+                            notes[index].isPinned = !notes[index].isPinned;
                           },
                         ),
                       ),

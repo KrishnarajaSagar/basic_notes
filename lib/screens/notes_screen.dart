@@ -10,6 +10,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:basic_notes/boxes.dart';
 import 'view_note_screen.dart';
 import 'package:animate_icons/animate_icons.dart';
+import 'note_search_screen.dart';
 
 class NotesScreen extends StatefulWidget {
   @override
@@ -45,7 +46,9 @@ class _NotesScreenState extends State<NotesScreen> {
         actions: [
           IconButton(
             icon: const Icon(LineIcons.search),
-            onPressed: () {},
+            onPressed: () {
+              showSearch(context: context, delegate: NoteSearch());
+            },
           ),
         ],
       ),
@@ -54,7 +57,39 @@ class _NotesScreenState extends State<NotesScreen> {
         valueListenable: Boxes.getNotes().listenable(),
         builder: (context, box, _) {
           final notes = box.values.toList().cast<NoteModel>();
-          return buildNotes(notes);
+          return notes.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        LineIcons.snowflake,
+                        size: 80,
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        "Wow so empty!",
+                        style: kBodyTextStyle.copyWith(color: Colors.grey),
+                      ),
+                      const SizedBox(
+                        height: 400,
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            "Add new note here",
+                            style: kBodyTextStyle.copyWith(color: Colors.grey),
+                          ),
+                          const Icon(
+                            LineIcons.arrowDown,
+                            color: Colors.grey,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              : buildNotes(notes);
         },
       ),
       floatingActionButton: SizedBox(
@@ -93,6 +128,7 @@ class _NotesScreenState extends State<NotesScreen> {
 
   Widget buildNotes(List<NoteModel> notes) {
     return GridView.builder(
+        physics: const BouncingScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 3 / 4,
@@ -131,6 +167,7 @@ class _NotesScreenState extends State<NotesScreen> {
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

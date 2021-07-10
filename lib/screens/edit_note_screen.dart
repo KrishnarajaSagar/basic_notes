@@ -53,6 +53,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: ListView(
+          physics: const BouncingScrollPhysics(),
           children: [
             Container(
               height: device.height / 7,

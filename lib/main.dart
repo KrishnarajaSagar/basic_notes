@@ -1,3 +1,4 @@
+import 'package:basic_notes/constants.dart';
 import 'package:basic_notes/models/note_model.dart';
 import 'package:flutter/material.dart';
 import 'package:basic_notes/screens/notes_screen.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
+      theme: ThemeData.dark().copyWith(
         //primarySwatch: Colors.blue,
         appBarTheme: AppBarTheme(
           backgroundColor: const Color(0xff272121),
@@ -30,6 +31,11 @@ class MyApp extends StatelessWidget {
           textTheme: TextTheme(
             headline6: GoogleFonts.openSans(fontSize: 16, color: Colors.white),
           ),
+        ),
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: kAccentColor,
+          selectionColor: kAccentColor,
+          selectionHandleColor: kAccentColor,
         ),
         scaffoldBackgroundColor: const Color(0xff272121),
         accentColor: Colors.deepOrangeAccent,
