@@ -1,5 +1,7 @@
 import 'package:basic_notes/constants.dart';
 import 'package:basic_notes/models/note_model.dart';
+import 'package:basic_notes/screens/add_note_screen.dart';
+import 'package:basic_notes/screens/view_note_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:basic_notes/screens/notes_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -40,7 +42,11 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xff272121),
         accentColor: Colors.deepOrangeAccent,
       ),
-      home: NotesScreen(),
+      //home: NotesScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => NotesScreen(),
+      },
     );
   }
 }

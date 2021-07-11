@@ -1,3 +1,4 @@
+import 'package:basic_notes/screens/notes_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:basic_notes/models/note_model.dart';
@@ -6,6 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:basic_notes/boxes.dart';
 import 'edit_note_screen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ViewNoteScreen extends StatefulWidget {
@@ -29,9 +31,6 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
   //   Hive.close();
   //   super.dispose();
   // }
-
-  final deletedSnackBar =
-      const SnackBar(content: Text("Note successfully deleted"));
 
   @override
   Widget build(BuildContext context) {
@@ -93,10 +92,33 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
                           ),
                           onPressed: () {
                             //setState(() {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(deletedSnackBar);
+                            Navigator.of(context).pushAndRemoveUntil(
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        NotesScreen(),
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  return SlideTransition(
+                                    position: animation.drive(
+                                      Tween(
+                                        begin: const Offset(0, 1),
+                                        end: const Offset(0, 0),
+                                      ).chain(CurveTween(
+                                          curve: Curves.easeOutCubic)),
+                                    ),
+                                    child: child,
+                                  );
+                                },
+                              ),
+                              (r) => false,
+                            );
+                            Fluttertoast.showToast(
+                              msg: "Note deleted",
+                              //toastLength: Toast.LENGTH_SHORT,
+                              backgroundColor: kAccentColor,
+                              textColor: Colors.white,
+                            );
                             deleteNote(widget.num);
                             //});
                           },
@@ -112,35 +134,44 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
         valueListenable: Boxes.getNotes().listenable(),
         builder: (context, box, _) {
           final notes = box.values.toList().cast<NoteModel>();
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: ListView(
-              physics: const BouncingScrollPhysics(),
-              children: [
-                Container(
-                  height: device.height / 7,
-                  child: Text(
-                    notes[widget.num].title,
-                    style: kTitleTextStyle.copyWith(
-                      fontSize: 28,
-                    ),
-                  ),
-                ),
-                Text(
-                  notes[widget.num].body,
-                  style: kBodyTextStyle.copyWith(
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(
-                  height: 50,
-                ),
-              ],
-            ),
-          );
+          return buildNotes(context, notes, widget.num);
         },
       ),
     );
+  }
+
+  Widget buildNotes(BuildContext context, List<NoteModel> notes, int num) {
+    try {
+      Size device = MediaQuery.of(context).size;
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: ListView(
+          physics: const BouncingScrollPhysics(),
+          children: [
+            Container(
+              height: device.height / 7,
+              child: Text(
+                notes[widget.num].title,
+                style: kTitleTextStyle.copyWith(
+                  fontSize: 28,
+                ),
+              ),
+            ),
+            Text(
+              notes[widget.num].body,
+              style: kBodyTextStyle.copyWith(
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      return const CircularProgressIndicator();
+    }
   }
 
   void deleteNote(int num) {

@@ -1,3 +1,4 @@
+import 'package:basic_notes/screens/notes_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
@@ -45,7 +46,25 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
             icon: const Icon(LineIcons.save),
             onPressed: () {
               editNote(title!, body!, isPinned, widget.num);
-              Navigator.of(context).pop();
+              Navigator.of(context).pushAndRemoveUntil(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      NotesScreen(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    return SlideTransition(
+                      position: animation.drive(
+                        Tween(
+                          begin: const Offset(0, 1),
+                          end: const Offset(0, 0),
+                        ).chain(CurveTween(curve: Curves.easeOutCubic)),
+                      ),
+                      child: child,
+                    );
+                  },
+                ),
+                (r) => false,
+              );
             },
           ),
         ],

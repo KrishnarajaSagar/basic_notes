@@ -117,7 +117,10 @@ class _NotesScreenState extends State<NotesScreen> {
             );
           },
           backgroundColor: kAccentColor,
-          child: const Icon(LineIcons.plus),
+          child: const Icon(
+            LineIcons.plus,
+            color: Colors.white,
+          ),
           mini: true,
         ),
       ),
