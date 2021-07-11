@@ -1,5 +1,6 @@
 import 'package:basic_notes/constants.dart';
 import 'package:basic_notes/models/note_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -32,6 +33,7 @@ class _NotesScreenState extends State<NotesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size device = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Notes"),
@@ -69,16 +71,21 @@ class _NotesScreenState extends State<NotesScreen> {
                       ),
                       Text(
                         "Wow so empty!",
-                        style: kBodyTextStyle.copyWith(color: Colors.grey),
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                              color: Colors.grey,
+                            ),
                       ),
-                      const SizedBox(
-                        height: 400,
+                      SizedBox(
+                        height: device.height / 3,
                       ),
                       Column(
                         children: [
                           Text(
                             "Add new note here",
-                            style: kBodyTextStyle.copyWith(color: Colors.grey),
+                            style:
+                                Theme.of(context).textTheme.bodyText1!.copyWith(
+                                      color: Colors.grey,
+                                    ),
                           ),
                           const Icon(
                             LineIcons.arrowDown,
@@ -89,7 +96,7 @@ class _NotesScreenState extends State<NotesScreen> {
                     ],
                   ),
                 )
-              : buildNotes(notes);
+              : buildNotes(context, notes);
         },
       ),
       floatingActionButton: SizedBox(
@@ -116,10 +123,10 @@ class _NotesScreenState extends State<NotesScreen> {
               ),
             );
           },
-          backgroundColor: kAccentColor,
-          child: const Icon(
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          child: Icon(
             LineIcons.plus,
-            color: Colors.white,
+            color: Theme.of(context).scaffoldBackgroundColor,
           ),
           mini: true,
         ),
@@ -129,7 +136,7 @@ class _NotesScreenState extends State<NotesScreen> {
     );
   }
 
-  Widget buildNotes(List<NoteModel> notes) {
+  Widget buildNotes(BuildContext context, List<NoteModel> notes) {
     return GridView.builder(
         physics: const BouncingScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -166,7 +173,7 @@ class _NotesScreenState extends State<NotesScreen> {
               padding: const EdgeInsets.all(10),
               margin: const EdgeInsets.all(5),
               decoration: BoxDecoration(
-                color: kCardBGColor,
+                color: Theme.of(context).colorScheme.background,
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Column(
@@ -180,10 +187,11 @@ class _NotesScreenState extends State<NotesScreen> {
                         child: Text(
                           notes[index].title,
                           overflow: TextOverflow.ellipsis,
-                          style: kTitleTextStyle.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.headline6!.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                       ),
                       Container(
@@ -192,12 +200,14 @@ class _NotesScreenState extends State<NotesScreen> {
                           icon: notes[index].isPinned == false
                               ? Icon(
                                   FontAwesomeIcons.bookmark,
-                                  color: kAccentColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   size: 18,
                                 )
                               : Icon(
                                   FontAwesomeIcons.solidBookmark,
-                                  color: kAccentColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   size: 18,
                                 ),
                           splashColor: Colors.transparent,
@@ -218,7 +228,7 @@ class _NotesScreenState extends State<NotesScreen> {
                     child: Text(
                       notes[index].body,
                       overflow: TextOverflow.ellipsis,
-                      style: kBodyTextStyle,
+                      style: Theme.of(context).textTheme.bodyText1,
                       maxLines: 8,
                       textAlign: TextAlign.start,
                     ),

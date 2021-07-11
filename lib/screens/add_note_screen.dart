@@ -36,23 +36,24 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: ListView(
+          physics: const BouncingScrollPhysics(),
           children: [
             Container(
               height: device.height / 7,
               child: TextField(
                 decoration: InputDecoration(
                   hintText: "Title",
-                  hintStyle: kTitleTextStyle.copyWith(
-                      fontSize: 28, color: Colors.grey),
-                  border: InputBorder.none,
+                  hintStyle: Theme.of(context).textTheme.headline6!.copyWith(
+                        fontSize: 28,
+                        color: Colors.grey,
+                      ),
                 ),
-                style: kTitleTextStyle.copyWith(
-                  fontSize: 28,
-                ),
+                style: Theme.of(context).textTheme.headline6!.copyWith(
+                      fontSize: 28,
+                    ),
                 onChanged: (String s) {
                   title = s;
                 },
-                cursorColor: Colors.white,
                 maxLines: 3,
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.sentences,
@@ -62,19 +63,18 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
             TextField(
               decoration: InputDecoration(
                 hintText: "Let it flow...!",
-                hintStyle: kBodyTextStyle.copyWith(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
+                hintStyle: Theme.of(context).textTheme.bodyText1!.copyWith(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
                 border: InputBorder.none,
               ),
-              style: kBodyTextStyle.copyWith(
-                fontSize: 14,
-              ),
+              style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                    fontSize: 14,
+                  ),
               onChanged: (String s) {
                 body = s;
               },
-              cursorColor: Colors.white,
               textCapitalization: TextCapitalization.sentences,
               keyboardType: TextInputType.multiline,
               //textInputAction: TextInputAction.newline,

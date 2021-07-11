@@ -74,21 +74,26 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
                     return AlertDialog(
                       title: Text(
                         "Confirm deletion?",
-                        style: kBodyTextStyle,
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
-                      backgroundColor: kCardBGColor,
+                      backgroundColor: Theme.of(context).colorScheme.background,
                       actions: [
                         TextButton(
                           child: Text(
                             "Cancel",
-                            style: kBodyTextStyle,
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                         ),
                         OutlinedButton(
                           child: Text(
                             "Confirm",
-                            style: kBodyTextStyle.copyWith(color: Colors.red),
+                            style:
+                                Theme.of(context).textTheme.bodyText1!.copyWith(
+                                      color: Colors.red,
+                                    ),
                           ),
                           onPressed: () {
                             //setState(() {
@@ -116,8 +121,9 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
                             Fluttertoast.showToast(
                               msg: "Note deleted",
                               //toastLength: Toast.LENGTH_SHORT,
-                              backgroundColor: kAccentColor,
-                              textColor: Colors.white,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.background,
+                              textColor: Theme.of(context).iconTheme.color,
                             );
                             deleteNote(widget.num);
                             //});
@@ -152,16 +158,16 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
               height: device.height / 7,
               child: Text(
                 notes[widget.num].title,
-                style: kTitleTextStyle.copyWith(
-                  fontSize: 28,
-                ),
+                style: Theme.of(context).textTheme.headline6!.copyWith(
+                      fontSize: 28,
+                    ),
               ),
             ),
             Text(
               notes[widget.num].body,
-              style: kBodyTextStyle.copyWith(
-                fontSize: 14,
-              ),
+              style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                    fontSize: 14,
+                  ),
             ),
             const SizedBox(
               height: 50,

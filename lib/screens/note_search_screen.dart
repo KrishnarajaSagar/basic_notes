@@ -1,6 +1,6 @@
 import 'package:basic_notes/boxes.dart';
-import 'package:basic_notes/constants.dart';
 import 'package:basic_notes/models/note_model.dart';
+import 'package:basic_notes/providers/theme_provider.dart';
 import 'package:basic_notes/screens/view_note_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,13 +8,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 
 class NoteSearch extends SearchDelegate<String> {
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: const Icon(LineIcons.times),
+        icon: Icon(
+          LineIcons.times,
+          color: Theme.of(context).iconTheme.color,
+        ),
         onPressed: () {
           query = "";
         },
@@ -26,7 +30,10 @@ class NoteSearch extends SearchDelegate<String> {
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
-      icon: const Icon(LineIcons.arrowLeft),
+      icon: Icon(
+        LineIcons.arrowLeft,
+        color: Theme.of(context).iconTheme.color,
+      ),
       onPressed: () {
         close(context, "");
       },
@@ -54,7 +61,7 @@ class NoteSearch extends SearchDelegate<String> {
         for (int i = 0; i < suggestionNotes.length; i++) {
           suggestionNotesNumbers.add(notes.indexOf(suggestionNotes[i]));
         }
-        return buildNotes(suggestionNotes, suggestionNotesNumbers);
+        return buildNotes(context, suggestionNotes, suggestionNotesNumbers);
       },
     );
     throw UnimplementedError();
@@ -62,37 +69,33 @@ class NoteSearch extends SearchDelegate<String> {
 
   @override
   ThemeData appBarTheme(BuildContext context) {
-    return ThemeData.dark().copyWith(
-      appBarTheme: AppBarTheme(
-        backgroundColor: const Color(0xff272121),
-        centerTitle: true,
-        elevation: 0,
-        textTheme: TextTheme(
-          headline6: GoogleFonts.openSans(fontSize: 16, color: Colors.white),
-        ),
-      ),
-      inputDecorationTheme: InputDecorationTheme().copyWith(
-        border: InputBorder.none,
-        hintStyle: kBodyTextStyle.copyWith(color: Colors.grey),
-        labelStyle: kBodyTextStyle,
-      ),
-      textSelectionTheme: TextSelectionThemeData(
-        cursorColor: kAccentColor,
-        selectionColor: kAccentColor,
-        selectionHandleColor: kAccentColor,
-      ),
-      scaffoldBackgroundColor: const Color(0xff272121),
-      accentColor: Colors.deepOrangeAccent,
-    );
+    final provider = Provider.of<ThemeProvider>(context, listen: false);
+    return provider.themeMode == ThemeMode.dark
+        ? MyThemes.darkTheme.copyWith(
+            textTheme: TextTheme(
+              headline6: GoogleFonts.openSans(color: Colors.white),
+              headline1: GoogleFonts.lora(color: Colors.white),
+              bodyText1: GoogleFonts.openSans(color: Colors.white),
+            ),
+          )
+        : MyThemes.lightTheme.copyWith(
+            textTheme: TextTheme(
+              headline6: GoogleFonts.openSans(color: Colors.black),
+              headline1: GoogleFonts.lora(color: Colors.black),
+              bodyText1: GoogleFonts.openSans(color: Colors.black),
+            ),
+          );
     throw UnimplementedError();
   }
 
-  Widget buildNotes(List<NoteModel> notes, List<int> notesNumbers) {
+  Widget buildNotes(
+      BuildContext context, List<NoteModel> notes, List<int> notesNumbers) {
     return GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 3 / 4,
         ),
+        physics: const BouncingScrollPhysics(),
         itemCount: notes.length,
         itemBuilder: (context, index) {
           return GestureDetector(
@@ -123,7 +126,7 @@ class NoteSearch extends SearchDelegate<String> {
               padding: const EdgeInsets.all(10),
               margin: const EdgeInsets.all(5),
               decoration: BoxDecoration(
-                color: kCardBGColor,
+                color: Theme.of(context).colorScheme.background,
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Column(
@@ -137,10 +140,11 @@ class NoteSearch extends SearchDelegate<String> {
                         child: Text(
                           notes[index].title,
                           overflow: TextOverflow.ellipsis,
-                          style: kTitleTextStyle.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.headline1!.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                       ),
                       Container(
@@ -149,12 +153,14 @@ class NoteSearch extends SearchDelegate<String> {
                           icon: notes[index].isPinned == false
                               ? Icon(
                                   FontAwesomeIcons.bookmark,
-                                  color: kAccentColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   size: 18,
                                 )
                               : Icon(
                                   FontAwesomeIcons.solidBookmark,
-                                  color: kAccentColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   size: 18,
                                 ),
                           splashColor: Colors.transparent,
@@ -173,7 +179,7 @@ class NoteSearch extends SearchDelegate<String> {
                     child: Text(
                       notes[index].body,
                       overflow: TextOverflow.ellipsis,
-                      style: kBodyTextStyle,
+                      style: Theme.of(context).textTheme.bodyText1,
                       maxLines: 8,
                       textAlign: TextAlign.start,
                     ),

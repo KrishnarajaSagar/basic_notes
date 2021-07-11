@@ -1,5 +1,4 @@
 import 'package:basic_notes/boxes.dart';
-import 'package:basic_notes/constants.dart';
 import 'package:basic_notes/models/note_model.dart';
 import 'package:basic_notes/screens/view_note_screen.dart';
 import 'package:flutter/material.dart';
@@ -66,12 +65,15 @@ class _SavedNotesScreenState extends State<SavedNotesScreen> {
                       ),
                       Text(
                         "Wow so empty!",
-                        style: kBodyTextStyle.copyWith(color: Colors.grey),
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                              color: Colors.grey,
+                            ),
                       ),
                     ],
                   ),
                 )
               : buildNotes(
+                  context,
                   savedNotes,
                   savedNotesNumbers,
                 );
@@ -80,12 +82,14 @@ class _SavedNotesScreenState extends State<SavedNotesScreen> {
     );
   }
 
-  Widget buildNotes(List<NoteModel> notes, List<int> noteNumbers) {
+  Widget buildNotes(
+      BuildContext context, List<NoteModel> notes, List<int> noteNumbers) {
     return GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 3 / 4,
         ),
+        physics: const BouncingScrollPhysics(),
         itemCount: notes.length,
         itemBuilder: (context, index) {
           return GestureDetector(
@@ -116,10 +120,11 @@ class _SavedNotesScreenState extends State<SavedNotesScreen> {
               padding: const EdgeInsets.all(10),
               margin: const EdgeInsets.all(5),
               decoration: BoxDecoration(
-                color: kCardBGColor,
+                color: Theme.of(context).colorScheme.background,
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -129,10 +134,11 @@ class _SavedNotesScreenState extends State<SavedNotesScreen> {
                         child: Text(
                           notes[index].title,
                           overflow: TextOverflow.ellipsis,
-                          style: kTitleTextStyle.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.headline6!.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                       ),
                       Container(
@@ -141,12 +147,14 @@ class _SavedNotesScreenState extends State<SavedNotesScreen> {
                           icon: notes[index].isPinned == false
                               ? Icon(
                                   FontAwesomeIcons.bookmark,
-                                  color: kAccentColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   size: 18,
                                 )
                               : Icon(
                                   FontAwesomeIcons.solidBookmark,
-                                  color: kAccentColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   size: 18,
                                 ),
                           splashColor: Colors.transparent,
@@ -167,7 +175,7 @@ class _SavedNotesScreenState extends State<SavedNotesScreen> {
                     child: Text(
                       notes[index].body,
                       overflow: TextOverflow.ellipsis,
-                      style: kBodyTextStyle,
+                      style: Theme.of(context).textTheme.bodyText1,
                       maxLines: 8,
                       textAlign: TextAlign.start,
                     ),

@@ -78,20 +78,20 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
               height: device.height / 7,
               child: TextFormField(
                 decoration: InputDecoration(
-                  border: InputBorder.none,
                   hintText: "Title",
-                  hintStyle: kTitleTextStyle.copyWith(
-                      fontSize: 28, color: Colors.grey),
+                  hintStyle: Theme.of(context).textTheme.headline6!.copyWith(
+                        fontSize: 28,
+                        color: Colors.grey,
+                      ),
                 ),
                 //controller: titleController,
-                style: kTitleTextStyle.copyWith(
-                  fontSize: 28,
-                ),
+                style: Theme.of(context).textTheme.headline6!.copyWith(
+                      fontSize: 28,
+                    ),
                 onChanged: (String s) {
                   title = s;
                 },
                 initialValue: title,
-                cursorColor: Colors.white,
                 maxLines: 3,
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.sentences,
@@ -100,22 +100,20 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
             ),
             TextFormField(
               decoration: InputDecoration(
-                border: InputBorder.none,
                 hintText: "Let it flow...!",
-                hintStyle: kBodyTextStyle.copyWith(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
+                hintStyle: Theme.of(context).textTheme.bodyText1!.copyWith(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
               ),
-              style: kBodyTextStyle.copyWith(
-                fontSize: 14,
-              ),
+              style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                    fontSize: 14,
+                  ),
               //controller: bodyController,
               onChanged: (String s) {
                 body = s;
               },
               initialValue: body,
-              cursorColor: Colors.white,
               textCapitalization: TextCapitalization.sentences,
               keyboardType: TextInputType.multiline,
               //textInputAction: TextInputAction.newline,
