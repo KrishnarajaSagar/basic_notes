@@ -12,6 +12,7 @@ import 'package:basic_notes/boxes.dart';
 import 'view_note_screen.dart';
 import 'package:animate_icons/animate_icons.dart';
 import 'note_search_screen.dart';
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 class NotesScreen extends StatefulWidget {
   @override
@@ -55,49 +56,58 @@ class _NotesScreenState extends State<NotesScreen> {
         ],
       ),
       drawer: SideDrawer(1),
-      body: ValueListenableBuilder<Box<NoteModel>>(
-        valueListenable: Boxes.getNotes().listenable(),
-        builder: (context, box, _) {
-          final notes = box.values.toList().cast<NoteModel>();
-          return notes.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        LineIcons.snowflake,
-                        size: 80,
-                        color: Colors.grey,
-                      ),
-                      Text(
-                        "Wow so empty!",
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+      body: DoubleBackToCloseApp(
+        snackBar: const SnackBar(
+          content: Text("Press back again to exit"),
+          behavior: SnackBarBehavior.floating,
+        ),
+        child: ValueListenableBuilder<Box<NoteModel>>(
+          valueListenable: Boxes.getNotes().listenable(),
+          builder: (context, box, _) {
+            final notes = box.values.toList().cast<NoteModel>();
+            return notes.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          LineIcons.snowflake,
+                          size: 80,
+                          color: Colors.grey,
+                        ),
+                        Text(
+                          "Wow so empty!",
+                          style:
+                              Theme.of(context).textTheme.bodyText1!.copyWith(
+                                    color: Colors.grey,
+                                  ),
+                        ),
+                        SizedBox(
+                          height: device.height / 3,
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              "Add new note here",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1!
+                                  .copyWith(
+                                    color: Colors.grey,
+                                  ),
+                            ),
+                            const Icon(
+                              LineIcons.arrowDown,
                               color: Colors.grey,
                             ),
-                      ),
-                      SizedBox(
-                        height: device.height / 3,
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            "Add new note here",
-                            style:
-                                Theme.of(context).textTheme.bodyText1!.copyWith(
-                                      color: Colors.grey,
-                                    ),
-                          ),
-                          const Icon(
-                            LineIcons.arrowDown,
-                            color: Colors.grey,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              : buildNotes(context, notes);
-        },
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                : buildNotes(context, notes);
+          },
+        ),
       ),
       floatingActionButton: SizedBox(
         height: 50,
@@ -215,6 +225,13 @@ class _NotesScreenState extends State<NotesScreen> {
                           onPressed: () {
                             setState(() {
                               notes[index].isPinned = !notes[index].isPinned;
+                              final box = Boxes.getNotes();
+                              NoteModel updatedNote = NoteModel(
+                                title: notes[index].title,
+                                body: notes[index].body,
+                                isPinned: notes[index].isPinned,
+                              );
+                              box.putAt(index, updatedNote);
                             });
                           },
                         ),

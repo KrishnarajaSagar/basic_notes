@@ -10,17 +10,21 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:basic_notes/models/note_model.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
   await Hive.initFlutter();
   Hive.registerAdapter(NoteModelAdapter());
   await Hive.openBox<NoteModel>('notes');
-  runApp(const MyApp());
+  runApp(MyApp(prefs));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final SharedPreferences prefs;
+  MyApp(this.prefs);
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -30,7 +34,8 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Basic',
           debugShowCheckedModeBanner: false,
-          themeMode: themeProvider.themeMode,
+          themeMode: themeProvider
+              .getTheme(prefs.getBool('darktheme') ?? themeProvider.isDarkMode),
           theme: MyThemes.lightTheme,
           darkTheme: MyThemes.darkTheme,
           home: NotesScreen(),

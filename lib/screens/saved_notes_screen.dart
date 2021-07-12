@@ -7,6 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:basic_notes/widgets/side_drawer.dart';
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 class SavedNotesScreen extends StatefulWidget {
   const SavedNotesScreen({Key? key}) : super(key: key);
@@ -32,52 +33,51 @@ class _SavedNotesScreenState extends State<SavedNotesScreen> {
             );
           },
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(LineIcons.search),
-            onPressed: () {
-              print(savedNotesNumbers);
-            },
-          ),
-        ],
       ),
       drawer: SideDrawer(2),
-      body: ValueListenableBuilder<Box<NoteModel>>(
-        valueListenable: Boxes.getNotes().listenable(),
-        builder: (context, box, _) {
-          final notes = box.values.toList().cast<NoteModel>();
-          savedNotes = notes.where((element) {
-            return element.isPinned == true;
-          }).toList();
-          for (int i = 0; i < savedNotes.length; i++) {
-            savedNotesNumbers.add(notes.indexOf(savedNotes[i]));
-          }
+      body: DoubleBackToCloseApp(
+        snackBar: const SnackBar(
+          content: Text("Press back again to exit"),
+          behavior: SnackBarBehavior.floating,
+        ),
+        child: ValueListenableBuilder<Box<NoteModel>>(
+          valueListenable: Boxes.getNotes().listenable(),
+          builder: (context, box, _) {
+            final notes = box.values.toList().cast<NoteModel>();
+            savedNotes = notes.where((element) {
+              return element.isPinned == true;
+            }).toList();
+            for (int i = 0; i < savedNotes.length; i++) {
+              savedNotesNumbers.add(notes.indexOf(savedNotes[i]));
+            }
 
-          return savedNotes.isEmpty
-              ? SizedBox.expand(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        LineIcons.snowflake,
-                        size: 80,
-                        color: Colors.grey,
-                      ),
-                      Text(
-                        "Wow so empty!",
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                              color: Colors.grey,
-                            ),
-                      ),
-                    ],
-                  ),
-                )
-              : buildNotes(
-                  context,
-                  savedNotes,
-                  savedNotesNumbers,
-                );
-        },
+            return savedNotes.isEmpty
+                ? SizedBox.expand(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          LineIcons.snowflake,
+                          size: 80,
+                          color: Colors.grey,
+                        ),
+                        Text(
+                          "Wow so empty!",
+                          style:
+                              Theme.of(context).textTheme.bodyText1!.copyWith(
+                                    color: Colors.grey,
+                                  ),
+                        ),
+                      ],
+                    ),
+                  )
+                : buildNotes(
+                    context,
+                    savedNotes,
+                    savedNotesNumbers,
+                  );
+          },
+        ),
       ),
     );
   }
@@ -162,6 +162,13 @@ class _SavedNotesScreenState extends State<SavedNotesScreen> {
                           onPressed: () {
                             setState(() {
                               notes[index].isPinned = !notes[index].isPinned;
+                              final box = Boxes.getNotes();
+                              NoteModel updatedNote = NoteModel(
+                                title: notes[index].title,
+                                body: notes[index].body,
+                                isPinned: notes[index].isPinned,
+                              );
+                              box.putAt(noteNumbers[index], updatedNote);
                             });
                           },
                         ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:basic_notes/providers/theme_provider.dart';
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -57,29 +58,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
       //     ),
       //   ],
       // ),
-      body: ListView(
-        children: [
-          ListTile(
-            tileColor: Theme.of(context).colorScheme.background,
-            leading: Icon(
-              LineIcons.adjust,
-              color: Theme.of(context).iconTheme.color,
+      body: DoubleBackToCloseApp(
+        snackBar: const SnackBar(
+          content: Text("Press back again to exit"),
+          behavior: SnackBarBehavior.floating,
+        ),
+        child: ListView(
+          children: [
+            ListTile(
+              tileColor: Theme.of(context).scaffoldBackgroundColor,
+              leading: Icon(
+                LineIcons.adjust,
+                color: Theme.of(context).iconTheme.color,
+              ),
+              title: Text(
+                "Dark Mode",
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+              trailing: Switch(
+                activeColor: Theme.of(context).colorScheme.secondary,
+                value: themeProvider.isDarkMode,
+                onChanged: (value) {
+                  final provider =
+                      Provider.of<ThemeProvider>(context, listen: false);
+                  provider.toggleTheme(value);
+                },
+              ),
             ),
-            title: Text(
-              "Dark Mode",
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-            trailing: Switch(
-              activeColor: Theme.of(context).colorScheme.secondary,
-              value: themeProvider.isDarkMode,
-              onChanged: (value) {
-                final provider =
-                    Provider.of<ThemeProvider>(context, listen: false);
-                provider.toggleTheme(value);
-              },
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
