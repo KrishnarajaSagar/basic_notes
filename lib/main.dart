@@ -14,17 +14,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
+
   await Hive.initFlutter();
   Hive.registerAdapter(NoteModelAdapter());
   await Hive.openBox<NoteModel>('notes');
-  runApp(MyApp(prefs));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final SharedPreferences prefs;
-  MyApp(this.prefs);
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -34,8 +31,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Basic',
           debugShowCheckedModeBanner: false,
-          themeMode: themeProvider
-              .getTheme(prefs.getBool('darktheme') ?? themeProvider.isDarkMode),
+          themeMode: themeProvider.getTheme(themeProvider.isDarkMode),
           theme: MyThemes.lightTheme,
           darkTheme: MyThemes.darkTheme,
           home: NotesScreen(),

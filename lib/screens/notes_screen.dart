@@ -83,7 +83,7 @@ class _NotesScreenState extends State<NotesScreen> {
                                   ),
                         ),
                         SizedBox(
-                          height: device.height / 3,
+                          height: device.height / 2 - 20,
                         ),
                         Column(
                           children: [
