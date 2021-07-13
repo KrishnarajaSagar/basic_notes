@@ -61,7 +61,32 @@ class NoteSearch extends SearchDelegate<String> {
         for (int i = 0; i < suggestionNotes.length; i++) {
           suggestionNotesNumbers.add(notes.indexOf(suggestionNotes[i]));
         }
-        return buildNotes(context, suggestionNotes, suggestionNotesNumbers);
+        return query.isEmpty
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 18,
+                    ),
+                    const Icon(
+                      LineIcons.binoculars,
+                      color: Colors.grey,
+                      size: 48,
+                    ),
+                    const SizedBox(
+                      height: 18,
+                    ),
+                    Text(
+                      "Start typing to search notes",
+                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            color: Colors.grey,
+                          ),
+                    )
+                  ],
+                ),
+              )
+            : buildNotes(context, suggestionNotes, suggestionNotesNumbers);
       },
     );
     throw UnimplementedError();
@@ -133,8 +158,6 @@ class NoteSearch extends SearchDelegate<String> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
                         child: Text(
@@ -150,24 +173,14 @@ class NoteSearch extends SearchDelegate<String> {
                       Container(
                         width: 30,
                         child: IconButton(
-                          icon: notes[index].isPinned == false
-                              ? Icon(
-                                  FontAwesomeIcons.bookmark,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                  size: 18,
-                                )
-                              : Icon(
-                                  FontAwesomeIcons.solidBookmark,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                  size: 18,
-                                ),
+                          icon: Icon(
+                            FontAwesomeIcons.bookmark,
+                            color: Theme.of(context).colorScheme.background,
+                            size: 18,
+                          ),
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
-                          onPressed: () {
-                            notes[index].isPinned = !notes[index].isPinned;
-                          },
+                          onPressed: () {},
                         ),
                       ),
                     ],

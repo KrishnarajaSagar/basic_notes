@@ -1,4 +1,3 @@
-import 'package:basic_notes/constants.dart';
 import 'package:basic_notes/widgets/side_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

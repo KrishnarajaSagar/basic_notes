@@ -1,4 +1,3 @@
-import 'package:basic_notes/constants.dart';
 import 'package:basic_notes/models/note_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:basic_notes/boxes.dart';
 import 'view_note_screen.dart';
-import 'package:animate_icons/animate_icons.dart';
+
 import 'note_search_screen.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
@@ -109,36 +108,31 @@ class _NotesScreenState extends State<NotesScreen> {
           },
         ),
       ),
-      floatingActionButton: SizedBox(
-        height: 50,
-        width: 100,
-        child: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    AddNoteScreen(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return SlideTransition(
-                    position: animation.drive(
-                      Tween(
-                        begin: const Offset(0, 1),
-                        end: const Offset(0, 0),
-                      ).chain(CurveTween(curve: Curves.easeOutCubic)),
-                    ),
-                    child: child,
-                  );
-                },
-              ),
-            );
-          },
-          backgroundColor: Theme.of(context).colorScheme.secondary,
-          child: Icon(
-            LineIcons.plus,
-            color: Theme.of(context).scaffoldBackgroundColor,
-          ),
-          mini: true,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  AddNoteScreen(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return SlideTransition(
+                  position: animation.drive(
+                    Tween(
+                      begin: const Offset(0, 1),
+                      end: const Offset(0, 0),
+                    ).chain(CurveTween(curve: Curves.easeOutCubic)),
+                  ),
+                  child: child,
+                );
+              },
+            ),
+          );
+        },
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        child: Icon(
+          LineIcons.plus,
+          color: Theme.of(context).scaffoldBackgroundColor,
         ),
       ),
       floatingActionButtonLocation:

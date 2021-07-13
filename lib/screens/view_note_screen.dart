@@ -2,7 +2,6 @@ import 'package:basic_notes/screens/notes_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:basic_notes/models/note_model.dart';
-import 'package:basic_notes/constants.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:basic_notes/boxes.dart';
@@ -143,6 +142,32 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
           return buildNotes(context, notes, widget.num);
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        child: widget.currentNote.isPinned == true
+            ? Icon(
+                FontAwesomeIcons.solidBookmark,
+                color: Theme.of(context).scaffoldBackgroundColor,
+                size: 18,
+              )
+            : Icon(
+                FontAwesomeIcons.bookmark,
+                color: Theme.of(context).scaffoldBackgroundColor,
+                size: 18,
+              ),
+        onPressed: () {
+          setState(() {
+            widget.currentNote.isPinned = !widget.currentNote.isPinned;
+            final box = Boxes.getNotes();
+            NoteModel updatedNote = NoteModel(
+              title: widget.currentNote.title,
+              body: widget.currentNote.body,
+              isPinned: widget.currentNote.isPinned,
+            );
+            box.putAt(widget.num, updatedNote);
+          });
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
     );
   }
 

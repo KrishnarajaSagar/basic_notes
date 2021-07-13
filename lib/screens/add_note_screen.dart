@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:basic_notes/constants.dart';
-import 'package:hive/hive.dart';
 import 'package:basic_notes/models/note_model.dart';
 import 'package:basic_notes/boxes.dart';
 
