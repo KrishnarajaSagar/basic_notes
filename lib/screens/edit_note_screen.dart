@@ -38,7 +38,10 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit"),
+        title: Text(
+          "Edit",
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
         actions: [
           IconButton(
             icon: const Icon(LineIcons.save),

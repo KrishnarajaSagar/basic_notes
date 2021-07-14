@@ -36,7 +36,10 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
     Size device = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("View"),
+        title: Text(
+          "View",
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
         actions: [
           IconButton(
             icon: const Icon(LineIcons.edit),

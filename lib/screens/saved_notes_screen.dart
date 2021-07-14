@@ -24,7 +24,10 @@ class _SavedNotesScreenState extends State<SavedNotesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Saved"),
+        title: Text(
+          "Saved",
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
         leading: Builder(
           builder: (context) {
             return IconButton(

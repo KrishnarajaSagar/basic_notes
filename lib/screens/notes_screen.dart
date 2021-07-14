@@ -36,7 +36,10 @@ class _NotesScreenState extends State<NotesScreen> {
     Size device = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Notes"),
+        title: Text(
+          "Notes",
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
         leading: Builder(
           builder: (context) {
             return IconButton(

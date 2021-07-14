@@ -20,7 +20,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Size device = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Settings"),
+        title: Text(
+          "Settings",
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
         leading: Builder(
           builder: (context) {
             return IconButton(

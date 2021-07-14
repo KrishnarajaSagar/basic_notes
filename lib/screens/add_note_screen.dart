@@ -20,7 +20,10 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add"),
+        title: Text(
+          "Add",
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
         actions: [
           IconButton(
             icon: const Icon(LineIcons.save),
