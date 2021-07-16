@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       builder: (context, _) {
         final themeProvider = Provider.of<ThemeProvider>(context);
         return MaterialApp(
-          title: 'Basic',
+          title: 'Basic-Notes',
           debugShowCheckedModeBanner: false,
           themeMode: themeProvider.getTheme(themeProvider.isDarkMode),
           theme: MyThemes.lightTheme,

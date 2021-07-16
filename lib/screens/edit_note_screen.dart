@@ -101,7 +101,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
             ),
             TextFormField(
               decoration: InputDecoration(
-                hintText: "Let it flow...!",
+                hintText: "Start typing content here...",
                 hintStyle: Theme.of(context).textTheme.bodyText1!.copyWith(
                       fontSize: 14,
                       color: Colors.grey,

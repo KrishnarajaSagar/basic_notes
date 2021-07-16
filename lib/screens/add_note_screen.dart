@@ -39,7 +39,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         child: ListView(
           physics: const BouncingScrollPhysics(),
           children: [
-            Container(
+            SizedBox(
               height: device.height / 7,
               child: TextField(
                 decoration: InputDecoration(
@@ -63,7 +63,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
             ),
             TextField(
               decoration: InputDecoration(
-                hintText: "Let it flow...!",
+                hintText: "Start typing content here...",
                 hintStyle: Theme.of(context).textTheme.bodyText1!.copyWith(
                       fontSize: 14,
                       color: Colors.grey,

@@ -14,6 +14,8 @@ import 'note_search_screen.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 class NotesScreen extends StatefulWidget {
+  const NotesScreen({Key? key}) : super(key: key);
+
   @override
   _NotesScreenState createState() => _NotesScreenState();
 }
