@@ -1,4 +1,3 @@
 # basic_notes
 
-
-![Demo](https://github.com/KrishnarajaSagar/basic_notes/blob/main/basic_notes.gif)
+<img src="https://github.com/KrishnarajaSagar/basic_notes/blob/main/basic_notes.gif" height="500" />
